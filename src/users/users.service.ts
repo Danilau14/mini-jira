@@ -57,7 +57,15 @@ export class UsersService {
     return updatedUser;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    const removedUser = await this.userModel.findOneAndUpdate(
+      { _id: id },
+      { recycleBin: true },
+      { new: true },
+    );
+    if (!removedUser) {
+      return { message: 'User not found' };
+    }
+    return removedUser;
   }
 }

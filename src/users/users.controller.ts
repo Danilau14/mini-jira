@@ -6,39 +6,50 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
+  HttpCode,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AuthGuard } from '../auth/guard/auth.guard';
+import { plainToInstance } from 'class-transformer';
+import { UserDto } from './dto/user.dto';
+import { ParseMongoIdPipe } from '../parse-mongo-id-pipe/parse-mongo-id-pipe.pipe';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @HttpCode(201)
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
+  @HttpCode(200)
   findAll() {
-    return this.usersService.findAll();
+    return plainToInstance(UserDto, this.usersService.findAll(), {
+      excludeExtraneousValues: true,
+    });
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOneById(id);
+  findOne(@Param('id', ParseMongoIdPipe) id: string) {
+    return plainToInstance(UserDto, this.usersService.findOneById(id), {
+      excludeExtraneousValues: true,
+    });
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id', ParseMongoIdPipe) id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  remove(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.usersService.remove(id);
   }
 }

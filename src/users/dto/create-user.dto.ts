@@ -1,14 +1,15 @@
 import { IsNotEmpty, IsString, MinLength, IsEmail } from 'class-validator';
 import { Transform, TransformFnParams } from 'class-transformer';
+import { UserDto } from './user.dto';
 
-export class CreateUserDto {
+export class CreateUserDto extends UserDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(2)
   @Transform(({ value }: TransformFnParams): string =>
     typeof value === 'string' ? value.trim() : '',
   )
-  name: string;
+  declare name: string;
 
   @IsNotEmpty()
   @IsString()
@@ -16,14 +17,14 @@ export class CreateUserDto {
   @Transform(({ value }: TransformFnParams): string =>
     typeof value === 'string' ? value.trim() : '',
   )
-  lastName: string;
+  declare lastName: string;
 
   @IsNotEmpty()
   @IsEmail()
   @Transform(({ value }: TransformFnParams): string =>
     typeof value === 'string' ? value.toLowerCase().trim() : '',
   )
-  email: string;
+  declare email: string;
 
   @IsNotEmpty()
   @IsString()
@@ -31,5 +32,5 @@ export class CreateUserDto {
   @Transform(({ value }: TransformFnParams): string =>
     typeof value === 'string' ? value.trim() : '',
   )
-  password: string;
+  declare password: string;
 }

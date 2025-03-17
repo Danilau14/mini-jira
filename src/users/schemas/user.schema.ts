@@ -16,6 +16,9 @@ export class User {
 
   @Prop({ required: true, unique: true, match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })
   email: string;
+
+  @Prop({ default: false })
+  recycleBin: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
