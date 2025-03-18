@@ -40,7 +40,7 @@ export class UsersController {
     });
   }
 
-  @Patch(':id')
+  @Patch('/update/:id')
   update(
     @Param('id', ParseMongoIdPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -48,7 +48,7 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
-  @Delete(':id')
+  @Patch('/delete/:id')
   remove(@Param('id', ParseMongoIdPipe) id: string) {
     return this.usersService.remove(id);
   }

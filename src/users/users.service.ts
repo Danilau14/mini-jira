@@ -35,36 +35,40 @@ export class UsersService {
   }
 
   async findOneById(id: string): Promise<User | null> {
-    return this.userModel.findOne({ _id: id });
+    const user: User | null = await this.userModel.findOne({ id });
+    if (!user) throw new BadRequestException('No user with id');
+    return user;
   }
 
   async findOneByEmail(email: string): Promise<User | null> {
-    return this.userModel.findOne({ email: email });
+    const user: User | null = await this.userModel.findOne({ email: email });
+    if (!user) throw new BadRequestException('No user with this email');
+    return user;
   }
 
   async update(
     id: string,
     updateUserDto: UpdateUserDto,
   ): Promise<User | { message: string }> {
-    const updatedUser = await this.userModel.findOneAndUpdate(
+    const updatedUser: User | null = await this.userModel.findOneAndUpdate(
       { _id: id },
       updateUserDto,
       { new: true },
     );
     if (!updatedUser) {
-      return { message: 'User not found' };
+      throw new BadRequestException('User not found');
     }
     return updatedUser;
   }
 
-  async remove(id: string) {
-    const removedUser = await this.userModel.findOneAndUpdate(
+  async remove(id: string): Promise<User | null> {
+    const removedUser: User | null = await this.userModel.findOneAndUpdate(
       { _id: id },
       { recycleBin: true },
       { new: true },
     );
     if (!removedUser) {
-      return { message: 'User not found' };
+      throw new BadRequestException('User not found');
     }
     return removedUser;
   }
