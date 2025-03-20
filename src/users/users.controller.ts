@@ -5,8 +5,8 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -14,13 +14,17 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { plainToInstance } from 'class-transformer';
 import { UserDto } from './dto/user.dto';
 import { ParseMongoIdPipe } from '../parse-mongo-id-pipe/parse-mongo-id-pipe.pipe';
+import { IsAdmin } from '../is-admin/is-admin.decorator';
+import { UserGuard } from './guard/user.guard';
 
+@UseGuards(UserGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
+  @Post('create')
   @HttpCode(201)
+  @IsAdmin()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }

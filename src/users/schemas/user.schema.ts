@@ -19,6 +19,9 @@ export class User {
 
   @Prop({ default: false })
   recycleBin: boolean;
+
+  @Prop({ default: false })
+  isAdmin: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

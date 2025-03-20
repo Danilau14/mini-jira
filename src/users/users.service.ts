@@ -41,9 +41,7 @@ export class UsersService {
   }
 
   async findOneByEmail(email: string): Promise<User | null> {
-    const user: User | null = await this.userModel.findOne({ email: email });
-    if (!user) throw new BadRequestException('No user with this email');
-    return user;
+    return this.userModel.findOne({ email: email });
   }
 
   async update(
